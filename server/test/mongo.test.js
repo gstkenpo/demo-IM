@@ -27,7 +27,6 @@ describe('test query/ save/ delete mongo', () => {
     it('test query', () => {
         Kitten.find({name: "Silence"}, (err, silences) => {
             expect(err).to.be.null;
-            console.log(silences);
             expect(silences).length(1);
         })
     });
