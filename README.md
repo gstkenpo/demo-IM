@@ -6,7 +6,6 @@ Demo Instance Messager is a self-hosted web application built on purely javascri
   - User Registration via email
   - Search your friend with email
   - One to One simple text chat
-ults in the right.
 
 ## Getting started
 
@@ -16,7 +15,7 @@ The project is broken down into a client and server folder.
 #### Prerequisite
 Make sure you have mongoDB running in your localhost. Here is the docker command to create a mongo instance.
 ```sh
-$ docker run --name hatchways-IM -e ME_CONFIG_MONGODB_ADMINPASSWORD=1234 -e ME_CONFIG_MONGODB_ADMINUSERNAME=root -p 8081:8081 -p 27017:27017 -d mongo:latest
+$ docker run --name hatchways-IM -p 27017:27017 -d mongo:latest
 ```
 
 ```sh

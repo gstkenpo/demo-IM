@@ -1,3 +1,4 @@
+require("dotenv").config();
 const createError = require("http-errors");
 const express = require("express");
 const { join } = require("path");
@@ -39,10 +40,9 @@ app.use(function(err, req, res, next) {
 /**
  * Connect monogoDB on localhost
  */
-
 const mongoose = require("mongoose");
 const env = process.env.NODE_ENV;
-const mongoUrl = 'mongodb://localhost:27017/HATCHWAYS_IM';
+const mongoUrl = process.env.DB_URL;
 const options = {
   keepAlive: 1,
   connectTimeoutMS: 30000,
@@ -57,9 +57,4 @@ mongoose.connect(mongoUrl, options,
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function() {
-//   // we're connected!
-//   console.log("we're connected!");
-//   console.log("status: " + db.readyState);
-// });
 module.exports = app;
