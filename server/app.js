@@ -36,4 +36,30 @@ app.use(function(err, req, res, next) {
   res.json({ error: err });
 });
 
+/**
+ * Connect monogoDB on localhost
+ */
+
+const mongoose = require("mongoose");
+const env = process.env.NODE_ENV;
+const mongoUrl = 'mongodb://localhost:27017/HATCHWAYS_IM';
+const options = {
+  keepAlive: 1,
+  connectTimeoutMS: 30000,
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+};
+
+mongoose.connect(mongoUrl, options, 
+  error => {
+    if (error) console.log('error when connect monogo:' + error);
+  });
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function() {
+//   // we're connected!
+//   console.log("we're connected!");
+//   console.log("status: " + db.readyState);
+// });
 module.exports = app;
