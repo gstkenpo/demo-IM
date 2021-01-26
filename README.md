@@ -17,9 +17,12 @@ Make sure you have mongoDB running in your localhost. Here is the docker command
 ```sh
 $ docker run --name hatchways-IM -p 27017:27017 -d mongo:latest
 ```
-
+You only need to run the above commend once to create db instance. And pls make sure the stance is started before startup the application
 ```sh
 $ docker start hatchways-IM
+```
+You can access the instance and create database or collection with the commands below
+```sh
 $ docker exec -it hatchways-IM mongo
 > create database HATCHWAYS_IM;
 > use HATCHWAYS_IM
@@ -27,6 +30,11 @@ $ docker exec -it hatchways-IM mongo
 ```
 
 #### Backend side
+#### Variable
+| Variable Name | Usage | Example |
+| ------ | ------ | ------ |
+| DB_URL | config database url | mongodb://localhost:27017/HATCHWAYS_IM |
+| PORT | config backend server port listening, 3001 if not configed | 8080 |
 You can run the backend side with the following code
 ```sh
 $ cd server

@@ -41,13 +41,13 @@ app.use(function(err, req, res, next) {
  * Connect monogoDB on localhost
  */
 const mongoose = require("mongoose");
-const env = process.env.NODE_ENV;
 const mongoUrl = process.env.DB_URL;
 const options = {
   keepAlive: 1,
   connectTimeoutMS: 30000,
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 };
 
 mongoose.connect(mongoUrl, options, 
