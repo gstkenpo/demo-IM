@@ -1,3 +1,4 @@
+require("dotenv").config();
 const createError = require("http-errors");
 const express = require("express");
 const { join } = require("path");
@@ -36,4 +37,24 @@ app.use(function(err, req, res, next) {
   res.json({ error: err });
 });
 
+/**
+ * Connect monogoDB on localhost
+ */
+const mongoose = require("mongoose");
+const mongoUrl = process.env.DB_URL;
+const options = {
+  keepAlive: 1,
+  connectTimeoutMS: 30000,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+};
+
+mongoose.connect(mongoUrl, options, 
+  error => {
+    if (error) console.log('error when connect monogo:' + error);
+  });
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
 module.exports = app;
