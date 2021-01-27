@@ -9,10 +9,12 @@ const jwt = require("express-jwt")
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
 const userRestRouter = require("./routes/user.rest");
+const loginRestRouter = require("./routes/login.rest");
 
 const jwtSecret = process.env.JWT_SECRET;
 const unprotectedRestEndPoint = [
-                            {url: '/rest/user', methods: ['POST']}
+                            {url: '/rest/user', methods: ['POST']},
+                            {url: '/rest/login', methods: ['POST']}
                           ];
 
 const { json, urlencoded } = express;
@@ -33,7 +35,9 @@ app.use("/rest", jwt({
                 }).unless({
                   //exclude some rest endpoints from jwt protection
                   path: unprotectedRestEndPoint
-                }), userRestRouter);
+                }), 
+                userRestRouter, 
+                loginRestRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,6 +1,8 @@
 const { expect, assert} = require("chai");
-const app = require("../app.js");
+const { User } = require("../model/user.js");
 const userService = require("../service/userService.js");
+const bcrypt = require('bcrypt');
+const saltRound = Number(process.env.SALT_ROUND);
 const prefix = "userService.test_"
 
 describe('User Registation Test', () => {
@@ -37,4 +39,37 @@ describe('User Registation Test', () => {
             expect(err).to.be.null;
         })
     })
+})
+
+describe('Validate User Test', () => {
+    before(async () => {
+        const hashedPw = await bcrypt.hash("password", saltRound);
+        const user = new User({
+            userName: prefix + 'userName',
+            email: prefix + "email",
+            password: hashedPw
+        });
+        await user.save();
+    })
+
+    after(async () => {
+        await User.deleteMany({userName: prefix + 'userName'}).exec();        
+    })
+    
+    it ('validate match', async() => {
+        const userName = prefix + 'userName';
+        const password = "password";
+        assert.ok(await userService.validateUser(userName, password));
+    });
+
+    it ('validate mismatch', async() => {
+        const userName = prefix + 'userName';
+        const password = "wrong-password";
+        assert.notOk(await userService.validateUser(userName, password));
+    });
+
+    it ('validate username missing', async() => {
+        const password = "password";
+        assert.notOk(await userService.validateUser(null, password));
+    });
 })

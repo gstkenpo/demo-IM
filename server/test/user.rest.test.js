@@ -60,8 +60,6 @@ describe("/Create User", () => {
                 )
                 .end((err, res) => {
                 res.should.have.status(401);
-                console.log(res.body.errors);
-                //res.body.errors[0].should.have.property("msg").eql('User Name already in use');
                 done();
                 });
             });

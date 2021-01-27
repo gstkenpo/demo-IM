@@ -20,7 +20,7 @@ const findByEmail = async (email) => {
 
 const findByUserName = async (userName) => {
     if (!userName) return Promise.reject();
-    return await User.find({userName: userName}).exec();
+    return await User.findOne({userName: userName}).exec();
 }
 
 const deleteByEmail = async (email) => {
@@ -28,7 +28,20 @@ const deleteByEmail = async (email) => {
     return await User.deleteOne({email: email}).exec();
 }
 
+const validateUser = async(userName, password) => {
+    if (!userName) return false;
+    const user = await this.findByUserName(userName);
+    if (!user) return false;
+    try {
+        return await bcrypt.compare(password, user.password);
+    } catch (err) {
+        logger.log("validateUser error: " + err);
+        return false;
+    }
+}
+
 exports.createUser = createUser;
 exports.findByEmail = findByEmail;
 exports.findByUserName = findByUserName;
 exports.deleteByEmail = deleteByEmail;
+exports.validateUser = validateUser;

@@ -4,7 +4,7 @@ const duplicateUserName = (userName) => {
     if (!userName) return Promise.reject('User Name is empty');
     return userService.findByUserName(userName)
     .then(user => {
-        if (user.length > 0) return Promise.reject('User Name already in use');
+        if (user) return Promise.reject('User Name already in use');
     })
 }
 
