@@ -3,14 +3,15 @@ const app = require("../app.js");
 const mongoose = require('mongoose');
 const { expect } = require("chai");
 
-
-it('test mongoose object', ()=>{
-    expect(mongoose).to.be.a('object');
-})
-
-it('test mongoose connection fine', ()=>{
-    const db = mongoose.connection;
-    expect(db.readyState).equal(mongoose.STATES.connected);
+describe('Test mongoose object', () => {
+    it('test mongoose object', () => {
+        expect(mongoose).to.be.a('object');
+    })
+    
+    it('test mongoose connection fine', ()=>{
+        const db = mongoose.connection;
+        expect(db.readyState).equal(mongoose.STATES.connected);
+    })
 })
 
 describe('test query/ save/ delete mongo', () => {
