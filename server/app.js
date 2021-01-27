@@ -4,9 +4,16 @@ const express = require("express");
 const { join } = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const jwt = require("express-jwt")
 
 const indexRouter = require("./routes/index");
 const pingRouter = require("./routes/ping");
+const userRestRouter = require("./routes/user.rest");
+
+const jwtSecret = process.env.JWT_SECRET;
+const unprotectedRestEndPoint = [
+                            {url: '/rest/user', methods: ['POST']}
+                          ];
 
 const { json, urlencoded } = express;
 
@@ -20,11 +27,20 @@ app.use(express.static(join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/ping", pingRouter);
+app.use("/rest", jwt({
+                  secret: jwtSecret,
+                  algorithms: ['HS256'] //avoid downgrade attack by specifing algo
+                }).unless({
+                  //exclude some rest endpoints from jwt protection
+                  path: unprotectedRestEndPoint
+                }), userRestRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+;
 
 // error handler
 app.use(function(err, req, res, next) {

@@ -1,9 +1,16 @@
-const { mongoose } = require("mongoose");
-const {User} = require("../model/user")
+const {User} = require("../model/user");
+const bcrypt = require('bcrypt');
+const saltRound = Number(process.env.SALT_ROUND);
 
 const createUser = async (userName, email, password) => {
-    const user = new User({userName: userName, email, email, password, password});
-    return await user.save();
+    const hashedPw = await bcrypt.hash(password, saltRound);
+    const user = new User({userName: userName, email: email, password: hashedPw});
+    try {
+        return await user.save();
+    } catch (err) {
+        console.log('err: ' + err);
+        throw err;
+    }
 }
 
 const findByEmail = async (email) => {

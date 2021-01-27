@@ -35,6 +35,9 @@ $ docker exec -it hatchways-IM mongo
 | ------ | ------ | ------ |
 | DB_URL | config database url | mongodb://localhost:27017/HATCHWAYS_IM |
 | PORT | config backend server port listening, 3001 if not configed | 8080 |
+| JWT_SECRET | Secret which is used to sign a token | any string |
+| JWT_EXPIRY | config JWT token expiry period | 1h, 1d or 1y |
+
 You can run the backend side with the following code
 ```sh
 $ cd server
@@ -45,6 +48,15 @@ You can run the test with the following command
 ```sh
 $ npm run test
 ```
+
+#### API List
+
+| API | Method | Need auth | Parameter | Usage | Response code | Response Body |
+| ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+|rest/user| GET | Y | email | Get friends userName By email | 200, 400 | userName
+|rest/user| POST | N | email, userName, password | Get friends userName By email | 201, 400 | jwt token |
+
+
 ### Tech
 
 Demo-IM uses a number of open source projects to work properly:
