@@ -45,7 +45,7 @@ router.post(url,
  */
 router.get(url, (req, res, next) => {
 	if (!req.user) {
-		return next(createError(400, 'unexpected error occur'));
+		return next(new Error('login failed, please try again'));
 	}
 	return res.status(200).json({userName: req.user.userName});
 });
