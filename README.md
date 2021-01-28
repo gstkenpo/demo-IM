@@ -53,9 +53,9 @@ $ npm run test
 
 | API | Method | Need auth | Parameter | Usage | Response code | Response Body |
 | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
-|rest/user| GET | Y | email | Get friends userName By email | 200, 401 | userName
-|rest/user| POST | N | email, userName, password | User Registration | 201, 400 | jwt token |
-|rest/login| POST | N | email, userName, password | User login | 200, 401 | jwt token |
+|rest/user| GET | Y | email | Return user info (userName for now) if user is logged in | 200, 401 | userName
+|rest/user| POST | N | email, userName, password | User Registration | 201, 400 | empty body with jwt token in session |
+|rest/login| POST | N | email, userName, password | User login | 200, 401 | empty body with jwt token in session |
 
 
 ### Tech
