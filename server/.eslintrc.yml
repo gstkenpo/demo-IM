@@ -6,10 +6,6 @@ env:
   mocha: true
 extends: 
   - 'eslint:recommended'
-plugins:
-  - 'mocha'
-parserOptions:
-  ecmaVersion: 12
 rules:
   indent:
   - error
