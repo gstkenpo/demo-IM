@@ -33,8 +33,9 @@ app.use('/rest', jwt({
 	secret: jwtSecret,
 	algorithms: ['HS256'], //avoid downgrade attack by specifing algo
 	getToken: (req) => {
-		if (req.headers.cookie && req.headers.cookie.split('=')[0] === 'Authorization') {
-			return req.headers.cookie.split('=')[1];
+		const cookies = req.cookies;
+		if (cookies && cookies.Authorization) {
+			return cookies.Authorization;
 		} 
 		return null;
 	}
