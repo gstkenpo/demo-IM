@@ -3,6 +3,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../app.js');
 const { User } = require('../model/user');
+const setCookie = require('set-cookie-parser');
 const prefix = 'user.test_';
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
@@ -24,7 +25,8 @@ describe('/Create User', () => {
 			)
 			.end((err, res) => {
 				res.should.have.status(201);
-				const token = res.body.token;
+				const cookies = setCookie.parse(res);
+				const token = cookies[0].value;
 				const decoded = jwt.verify(token, jwtSecret);
 				assert.equal(decoded.userName, prefix + 'testingUserNmae');
 				done();

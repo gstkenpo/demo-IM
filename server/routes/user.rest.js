@@ -28,7 +28,7 @@ router.post(url,
 			const user = await userService.createUser(userName, email, password);
 			try {
 				const jwtToken = jwtService.sign(user.userName);
-				return res.status(201).json({token: jwtToken});
+				return res.status(201).cookie('Authorization', jwtToken, {httpOnly: true }).send();
 			} catch (err) {
 				console.log('jwt signing error: ' + err);
 				next(createError(400, 'unexpected error occur'));

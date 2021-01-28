@@ -5,6 +5,7 @@ const app = require('../app.js');
 const { User } = require('../model/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const setCookie = require('set-cookie-parser');
 const saltRound = Number(process.env.SALT_ROUND);
 const jwtSecret = process.env.JWT_SECRET;
 const prefix = 'login.test_';
@@ -39,7 +40,8 @@ describe('/Login User', () => {
 			)
 			.end((err, res) => {
 				res.should.have.status(200);
-				const token = res.headers['set-cookie'][0].split(';')[0].split('=')[1];
+				const cookies = setCookie.parse(res);
+				const token = cookies[0].value;
 				const decoded = jwt.verify(token, jwtSecret);
 				assert.equal(decoded.userName, prefix + 'userName');
 				done();
