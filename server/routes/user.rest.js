@@ -40,18 +40,14 @@ router.post(url,
 	});
 
 /**
- * @param email
- * @returns user id and userName JSON format
+ * @param NAN, provided by JSON payload
+ * @returns user userName in JSON format
  */
 router.get(url, (req, res, next) => {
-	const email = req.params['email'];
-	userService.findByEmail(email)
-		.then(user => {
-			return res.json(user);
-		}).catch(err => {
-			console.log('error occur: ' + err);
-			next(createError(400, 'unexpected error occur'));
-		});
+	if (!req.user) {
+		return next(createError(400, 'unexpected error occur'));
+	}
+	return res.status(200).json({userName: req.user.userName});
 });
 
 module.exports = router;
