@@ -2,13 +2,11 @@ const express = require("express");
 const { body, validationResult } = require('express-validator');
 const userService = require("../service/userService");
 const jwtService = require("../service/jwtService");
-const duplicateEmail = require("../validator/emailValidator");
-const userNameValidator = require("../validator/userNameValidator");
+const authValidator = require("../validator/authValidator");
 const createError = require("http-errors");
 const router = express.Router();
 const url = '/user';
 
-//ES2017 standard
 /**
  * create user restful API
  * @param email
@@ -17,8 +15,8 @@ const url = '/user';
  * @returns a jwt token with code 201
  */
 router.post(url,
-body('email').isEmail().custom(duplicateEmail),
-body('userName').not().isEmpty().withMessage('user name can\'t be empty ').custom(userNameValidator.duplicateUserName),
+body('email').isEmail().custom(authValidator.duplicateEmail),
+body('userName').not().isEmpty().withMessage('user name can\'t be empty ').custom(authValidator.duplicateUserName),
 body('password').isLength({min: 7}),
 async (req, res, next) => {
     const errors = validationResult(req);
@@ -46,8 +44,8 @@ async (req, res, next) => {
  * @returns user id and userName JSON format
  */
 router.get(url, (req, res, next) => {
-    const body = req.body;
-    userService.findByEmail(body.email)
+    const email = req.params['email'];
+    userService.findByEmail(email)
     .then(user => {
         return res.json(user);
     }).catch(err => {
