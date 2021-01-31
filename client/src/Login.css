@@ -1,19 +1,19 @@
-.SignUpForm {
+.LoginForm {
   font-weight: 'semibold';
 }
-.SignUpPage > .SidImage{
+.LoginPage > .SidImage{
   height: auto;
   opacity:85%;
   background:linear-gradient(#3A8DFF,#86B9FF);
   background-color:orange /*this your primary color*/
 }
 
-.SignUpPage > .SignUpForm {
+.LoginPage > .LoginForm {
   padding-left: 5%;
   padding-top: 10%;
   width: 30%;
 }
-.SignUpPage > .SignUpForm > .Create{
+.LoginPage > .LoginForm > .Login{
   text-align: center;
   max-width: 100px;
   height: 50px;
@@ -21,7 +21,7 @@
 }
 
 @media (max-width: 767px) {                  
-  .SignUpPage > .SidImage {
+  .LoginPage > .SidImage {
      display: none;
   }
 }

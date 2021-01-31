@@ -1,35 +1,25 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Button, FormControl, TextField } from '@material-ui/core';
+import { AppBar, Button, FormControl, TextField, Toolbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import React, { useState } from 'react';
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import bgImg from '../images/bgImg.png';
+import '../Login.css';
 
-const LoginPage = (props) => {
-	const button = {
-		padding: '10px 20px',
-		border: 'none',
-		borderRadius: '4px',
-		background: '#fff',
-		color: '#3A8DFF',
-		fontSize: '14px',
-		cursor: 'pointer',
-		transition: '.3s background',
-		'&:hover': {
-			background: '#3A8DFF'
-		}
-	};
-      
-	const [userName, setUserName] = useState('');
-	const [password, setPassword] = useState('');
+class LoginPage extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {userName: '', password: ''};
+	}
 
-	const loginHandler = () => {
-		console.log('userName: ' + userName);
-		console.log('password: ' + password);
+	loginHandler = () => {
+		this.setState({message: ''});
 		fetch('rest/login', {
 			method: 'POST',
 			body: JSON.stringify({
-				userName: userName,
-				password: password
+				userName: this.state.userName,
+				password: this.state.password
 			}),
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8'
@@ -43,39 +33,61 @@ const LoginPage = (props) => {
 				}).then(res => {
 					console.log('GET STATUS: '+ res.status);
 					res.json().then((data) => {
-						props.loginHandler(data.userName, 'Login Succeed');
+						this.props.history.push('/');
 					});
 				});
 			} else {
 				res.json().then(data => {
-					props.loginHandler(null, data.error.message);//loginFailed
+					this.setState({message: data.error.message});
 				});
 			}
 		});
 	};
     
-	return (
-		<div>
-			<FormControl>
-				{
-					props.loginFailed ? 
-						<Alert severity="error">{props.message}</Alert> : null
+	render() {
+		return (
+			<div>
+				{this.state.isSucceed ? 
+					<Redirect to={{
+						pathname: '/'
+					}}/> :
+					<div className="LoginPage">
+						<AppBar style={{ background: 'transparent', boxShadow: 'none'}}>
+							<Toolbar>
+								<section style={{marginLeft: 'auto', marginRight: -12}}>
+									<h6 style={{color: 'grey'}}>Already have an account?
+										<Button className = 'Login' 
+											variant='contained' 
+											style={{backgroundColor: '#ffffff'}}
+											onClick={this.routeLogin}>Login</Button>
+									</h6>
+								</section>
+							</Toolbar>
+						</AppBar>
+						<img className="SidImage" src={bgImg}></img>
+						<FormControl className="LoginForm">
+							{
+								this.state.message ? 
+									<Alert severity="error">{this.state.message}</Alert> : null
+							}
+							<TextField
+								label={'User Name'}
+								onChange={e => this.setState({userName: e.target.value})}
+								value={this.state.userName}
+							/>
+							<TextField
+								label={'Password'}
+								type="password"
+								onChange={e => this.setState({password: e.target.value})}
+							/>
+							<br/>
+							<Button variant='contained' color="primary" onClick={this.loginHandler} className='Login'>Login</Button>
+						</FormControl>
+					</div>
 				}
-				<TextField
-					label={'User Name'}
-					onChange={e => setUserName(e.target.value)}
-					value={userName}
-				/>
-				<TextField
-					label={'Password'}
-					type="password"
-					onChange={e => setPassword(e.target.value)}
-				/>
-				<br/>
-				<Button variant='contained' color="primary" onClick={loginHandler}>Login</Button>
-			</FormControl>
-		</div>
-	);
-};
+			</div>
+		);
+	}
+}
 
 export default (LoginPage);
