@@ -1,0 +1,27 @@
+.SignUpForm {
+  font-weight: 'semibold';
+}
+.SignUpPage > .SidImage{
+  height: auto;
+  opacity:85%;
+  background:linear-gradient(#3A8DFF,#86B9FF);
+  background-color:orange /*this your primary color*/
+}
+
+.SignUpPage > .SignUpForm {
+  padding-left: 5%;
+  padding-top: 10%;
+  width: 30%;
+}
+.SignUpPage > .SignUpForm > .Create{
+  text-align: center;
+  max-width: 100px;
+  height: 50px;
+  border-radius: 0px;
+}
+
+@media (max-width: 767px) {                  
+  .SignUpPage > .SidImage {
+     display: none;
+  }
+}
