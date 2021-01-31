@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { AppBar, Button, FormControl, TextField, Toolbar } from '@material-ui/core';
+import { Button, FormControl, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { Component } from 'react';
 import bgImg from '../images/bgImg.png';
@@ -9,7 +9,7 @@ import '../SignUp.css';
 class SignupPage extends Component {
 	constructor(props){
 		super(props);
-		this.state = {userName:'', password: '', email: '', 
+		this.state = {userName:'', password: '', email: '', confirmPassword: '',
 			userNameErr: null, passwordErr: null, emailErr: null};
 	}
 
@@ -61,7 +61,7 @@ class SignupPage extends Component {
 	render() {
 		return (
 			<div className="SignUpPage">
-				<AppBar style={{ background: 'transparent', boxShadow: 'none'}}>
+				{/* <AppBar style={{ background: 'transparent', boxShadow: 'none'}}>
 					<Toolbar>
 						<section style={{marginLeft: 'auto', marginRight: -12}}>
 							<h6 style={{color: 'grey'}}>Already have an account?
@@ -69,7 +69,7 @@ class SignupPage extends Component {
 							</h6>
 						</section>
 					</Toolbar>
-				</AppBar>
+				</AppBar> */}
 				<img className="SidImage" src={bgImg}></img>
 				
 				<FormControl className="SignUpForm">
@@ -99,6 +99,12 @@ class SignupPage extends Component {
 						onChange={e => this.setState({password: e.target.value})}
 						error={this.state.passwordErr ? true : false}
 						helperText={this.state.passwordErr}
+					/>
+					<br/>
+					<TextField
+						label={'Confirm Password'}
+						type="password"
+						onChange={e => this.setState({confirmPassword: e.target.value})}
 					/>
 					<br/>
 					<Button className = "Create" variant='contained' color="primary" onClick={this.signUpHandler}>Create</Button>
