@@ -19,7 +19,7 @@ class Dashboard extends React.Component {
     		<div>
     			{this.state.isLogined ? 
     				<p>Welcome  {this.state.userName}</p> :
-    				<SignupPage loginHandler={this.loginHandler}
+    				<SignupPage signUpHandler={this.loginHandler}
 						loginFailed={this.state.loginFailed}
 						message={this.state.message}/>
     			}

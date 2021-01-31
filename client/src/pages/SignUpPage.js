@@ -1,74 +1,111 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Button, FormControl, TextField } from '@material-ui/core';
+import { AppBar, Button, FormControl, TextField, Toolbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import bgImg from '../images/bgImg.png';
 import '../SignUp.css';
   
-const SignupPage = (props) => {
-	const [userName, setUserName] = useState('');
-	const [password, setPassword] = useState('');
-	const [email, setEmail] = useState('');
+class SignupPage extends Component {
+	constructor(props){
+		super(props);
+		this.state = {userName:'', password: '', email: '', 
+			userNameErr: null, passwordErr: null, emailErr: null};
+	}
 
-	const signupHandler = () => {
+	signUpHandler = () => {
 		fetch('rest/user', {
 			method: 'POST',
 			body: JSON.stringify({
-				userName: userName,
-				password: password,
-				email: email,
+				userName: this.state.userName,
+				password: this.state.password,
+				email: this.state.email,
 			}),
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8'
 			}
 		}).then(res => {
 			console.log('POST STATUS: '+ res.status);
-			if (res.status == 200){
+			if (res.status == 201){
 				// eslint-disable-next-line react/prop-types
 				fetch('rest/user', {
 					method: 'GET'
 				}).then(res => {
 					console.log('GET STATUS: '+ res.status);
 					res.json().then((data) => {
-						props.signupHandler(data.userName, 'Login Succeed');
+						this.props.signUpHandler(data.userName, 'Sing up Succeed');
 					});
+				});
+			} else {
+				this.setState({message: 'Sign Up Failed'});
+				res.json().then(data => {
+					this.setState({userNameErr: this.retrieveErrorMessage(data.errors, 'userName')});
+					this.setState({emailErr: this.retrieveErrorMessage(data.errors, 'email')});
+					this.setState({passwordErr: this.retrieveErrorMessage(data.errors, 'password')});
 				});
 			}
 		});
 	};
-    
-	return (
-		<div className="SignUpPage">
-			<img className="SidImage" src={bgImg}></img>
-			<Button variant='contained' color="primary">Login</Button>
-			<FormControl className="SignUpForm">
-				{
-					props.loginFailed ? 
-						<Alert severity="error">{props.message}</Alert> : null
-				}
-				<h2>Create an account.</h2>
-				<TextField
-					label={'Username'}
-					onChange={e => setUserName(e.target.value)}
-					value={userName}
-				/>
-				<br/>
-				<TextField
-					label={'E-mail address'}
-					onChange={e => setEmail(e.target.value)}
-				/>
-				<br/>
-				<TextField
-					label={'Password'}
-					type="password"
-					onChange={e => setPassword(e.target.value)}
-				/>
-				<br/>
-				<Button className = "Create" variant='contained' color="primary" onClick={signupHandler}>Create</Button>
-			</FormControl>
-		</div>
-	);
-};
+
+	retrieveErrorMessage(data, fieldName){
+		let errMsgs = '';
+		for (let i = 0; i < data.length; i++) {
+			if(data[i].param === fieldName){
+				console.log(data[i].msg);
+				errMsgs += data[i].msg + ' \n ';
+			}
+		}
+		return errMsgs;
+	}
+	
+	render() {
+		return (
+			<div className="SignUpPage">
+				<AppBar style={{ background: 'transparent', boxShadow: 'none'}}>
+					<Toolbar>
+						<section style={{marginLeft: 'auto', marginRight: -12}}>
+							<h6 style={{color: 'grey'}}>Already have an account?
+								<Button className = 'Login' variant='contained'>Login</Button>
+							</h6>
+						</section>
+					</Toolbar>
+				</AppBar>
+				<img className="SidImage" src={bgImg}></img>
+				
+				<FormControl className="SignUpForm">
+					{
+						this.state.message ? 
+							<Alert severity="error">{this.state.message}</Alert> : null
+					}
+					<h2>Create an account.</h2>
+					<TextField
+						label={'Username'}
+						onChange={e => this.setState({userName: e.target.value})}
+						value={this.state.userName}
+						error={this.state.userNameErr ? true : false}
+						helperText={this.state.userNameErr}
+					/>
+					<br/>
+					<TextField
+						label={'E-mail address'}
+						onChange={e => this.setState({email: e.target.value})}
+						error={this.state.emailErr ? true : false}
+						helperText={this.state.emailErr}
+					/>
+					<br/>
+					<TextField
+						label={'Password'}
+						type="password"
+						onChange={e => this.setState({password: e.target.value})}
+						error={this.state.passwordErr ? true : false}
+						helperText={this.state.passwordErr}
+					/>
+					<br/>
+					<Button className = "Create" variant='contained' color="primary" onClick={this.signUpHandler}>Create</Button>
+				</FormControl>
+			</div>
+		);
+	}
+}
 
 export default (SignupPage);
