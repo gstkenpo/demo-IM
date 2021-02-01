@@ -10,38 +10,60 @@ import '../Login.css';
 class LoginPage extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {userName: '', password: ''};
+		this.state = {userName: '', password: '', userNameErr: null, passwordErr: null};
+	}
+
+	fieldsValidation = () => {
+		let hasError = false;
+		let passwordErr = '', userNameErr = '';
+		if (!this.state.userName) {
+			userNameErr = 'Username can\'t be empty';
+			hasError = true;
+		}
+		if (!this.state.password) {
+			passwordErr = 'Password can\'t be empty';
+			hasError = true;
+		} else {
+			if (this.state.password < 7){
+				passwordErr += 'Password length should be larger than 6';
+				hasError = true;
+			}
+		}
+		this.setState({userNameErr: userNameErr, passwordErr: passwordErr});
+		return !hasError;
 	}
 
 	loginHandler = () => {
 		this.setState({message: ''});
-		fetch('rest/login', {
-			method: 'POST',
-			body: JSON.stringify({
-				userName: this.state.userName,
-				password: this.state.password
-			}),
-			headers: {
-				'Content-type': 'application/json; charset=UTF-8'
-			}
-		}).then(res => {
-			console.log('POST STATUS: '+ res.status);
-			if (res.status == 200){
-				// eslint-disable-next-line react/prop-types
-				fetch('rest/user', {
-					method: 'GET'
-				}).then(res => {
-					console.log('GET STATUS: '+ res.status);
-					res.json().then((data) => {
-						this.props.history.push('/');
+		if (this.fieldsValidation()){
+			fetch('rest/login', {
+				method: 'POST',
+				body: JSON.stringify({
+					userName: this.state.userName,
+					password: this.state.password
+				}),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8'
+				}
+			}).then(res => {
+				console.log('POST STATUS: '+ res.status);
+				if (res.status == 200){
+					// eslint-disable-next-line react/prop-types
+					fetch('rest/user', {
+						method: 'GET'
+					}).then(res => {
+						console.log('GET STATUS: '+ res.status);
+						res.json().then((data) => {
+							this.props.history.push('/');
+						});
 					});
-				});
-			} else {
-				res.json().then(data => {
-					this.setState({message: data.error.message});
-				});
-			}
-		});
+				} else {
+					res.json().then(data => {
+						this.setState({message: data.error.message});
+					});
+				}
+			});
+		}
 	};
     
 	render() {
@@ -74,11 +96,15 @@ class LoginPage extends Component {
 								label={'User Name'}
 								onChange={e => this.setState({userName: e.target.value})}
 								value={this.state.userName}
+								error={this.state.userNameErr ? true : false}
+								helperText={this.state.userNameErr}
 							/>
 							<TextField
 								label={'Password'}
 								type="password"
 								onChange={e => this.setState({password: e.target.value})}
+								error={this.state.passwordErr ? true : false}
+								helperText={this.state.passwordErr}
 							/>
 							<br/>
 							<Button variant='contained' color="primary" onClick={this.loginHandler} className='Login'>Login</Button>

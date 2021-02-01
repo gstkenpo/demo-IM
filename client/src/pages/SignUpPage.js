@@ -37,7 +37,6 @@ class SignupPage extends Component {
 				hasError = true;
 			}
 			if (this.state.password != this.state.confirmPassword){
-				console.log(passwordErr);
 				passwordErr += 'Password isn\'t matched';
 				hasError = true;
 			}
