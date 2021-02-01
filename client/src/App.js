@@ -1,20 +1,24 @@
-import React from "react";
-import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route } from "react-router-dom";
+import { MuiThemeProvider } from '@material-ui/core';
+import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
+import './App.css';
+import Dashboard from './pages/Dashboard';
+import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
+import { theme } from './themes/theme';
 
-import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
 
-import "./App.css";
 
 function App() {
-  return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Route path="/" component={LandingPage} />
-      </BrowserRouter>
-    </MuiThemeProvider>
-  );
+	return (
+		<MuiThemeProvider theme={theme}>
+			<BrowserRouter>
+				<Route exact path="/" component={Dashboard} />
+				<Route exact path="/signup" component={SignUpPage} />
+				<Route exact path="/login" component={LoginPage} />
+			</BrowserRouter>
+		</MuiThemeProvider>
+	);
 }
 
 export default App;
