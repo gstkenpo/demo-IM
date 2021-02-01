@@ -14,38 +14,70 @@ class SignupPage extends Component {
 			userNameErr: null, passwordErr: null, emailErr: null, isSucceed: false};
 	}
 
+	fieldsValidation = () => {
+		let hasError = false;
+		let passwordErr = '', userNameErr = '', emailErr= '';
+		if (!this.state.userName) {
+			userNameErr = 'Username can\'t be empty';
+			hasError = true;
+		}
+		if (!this.state.email) {
+			emailErr = 'Email can\'t be empty';
+			hasError = true;
+		} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(this.state.email)){
+			emailErr = 'Email is not valid';
+			hasError = true;
+		}
+		if (!this.state.password) {
+			passwordErr = 'Password can\'t be empty';
+			hasError = true;
+		} else {
+			if (this.state.password < 7){
+				passwordErr += 'Password length should be larger than 6';
+				hasError = true;
+			}
+			if (this.state.password != this.state.confirmPassword){
+				console.log(passwordErr);
+				passwordErr += 'Password isn\'t matched';
+				hasError = true;
+			}
+		}
+		this.setState({userNameErr: userNameErr, passwordErr: passwordErr, emailErr: emailErr});
+		return !hasError;
+	}
+
 	signUpHandler = () => {
-		fetch('rest/user', {
-			method: 'POST',
-			body: JSON.stringify({
-				userName: this.state.userName,
-				password: this.state.password,
-				email: this.state.email,
-			}),
-			headers: {
-				'Content-type': 'application/json; charset=UTF-8'
-			}
-		}).then(res => {
-			console.log('POST STATUS: '+ res.status);
-			if (res.status == 201){
-				// eslint-disable-next-line react/prop-types
-				this.setState({isSucceed: true});
-			} else {
-				this.setState({message: 'Sign Up Failed'});
-				res.json().then(data => {
-					this.setState({userNameErr: this.retrieveErrorMessage(data.errors, 'userName')});
-					this.setState({emailErr: this.retrieveErrorMessage(data.errors, 'email')});
-					this.setState({passwordErr: this.retrieveErrorMessage(data.errors, 'password')});
-				});
-			}
-		});
+		if (this.fieldsValidation()){
+			fetch('rest/user', {
+				method: 'POST',
+				body: JSON.stringify({
+					userName: this.state.userName,
+					password: this.state.password,
+					email: this.state.email,
+				}),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8'
+				}
+			}).then(res => {
+				if (res.status == 201){
+					// eslint-disable-next-line react/prop-types
+					this.setState({isSucceed: true});
+				} else {
+					this.setState({message: 'Sign Up Failed'});
+					res.json().then(data => {
+						this.setState({userNameErr: this.retrieveErrorMessage(data.errors, 'userName')});
+						this.setState({emailErr: this.retrieveErrorMessage(data.errors, 'email')});
+						this.setState({passwordErr: this.retrieveErrorMessage(data.errors, 'password')});
+					});
+				}
+			});
+		}
 	};
 
 	retrieveErrorMessage(data, fieldName){
 		let errMsgs = '';
 		for (let i = 0; i < data.length; i++) {
 			if(data[i].param === fieldName){
-				console.log(data[i].msg);
 				errMsgs += data[i].msg + ' \n ';
 			}
 		}
@@ -53,7 +85,6 @@ class SignupPage extends Component {
 	}
 
 	routeLogin = () => {
-		console.log('route Loginx');
 		this.props.history.push('/login');
 	};
 	
